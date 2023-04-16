@@ -14,7 +14,7 @@ app.use(bodyparser.json())
 app.use(cors({origin: '*'}))
 
 app.use('/usuario', require('./routes/Usuario.route'))
-// app.use('/ciudad', require('./routes/Ciudad.route'))
+app.use('/mensaje', require('./routes/Mensaje.route'))
 
 app.listen(app.get('puerto'), function() {
     console.log('Escuchando en el puerto ' + app.get('puerto'))
