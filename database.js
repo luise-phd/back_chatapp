@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-url = ('mongodb://localhost/chatapp')
-// url = ('mongodb+srv://ingluise:luis_chatapp@cluster0.1omyz.mongodb.net/ChatApp?retryWrites=true&w=majority')
+// url = ('mongodb://localhost/chatapp')
+url = ('mongodb+srv://ingluise:luis_chatapp@cluster0.1omyz.mongodb.net/ChatApp?retryWrites=true&w=majority')
 
 mongoose.connect(url, {
     useNewUrlParser: true,
