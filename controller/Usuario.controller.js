@@ -1,5 +1,6 @@
 const UsuariosCtrl = {};
 const Usuario = require("../models/Usuario.model");
+const Mensaje = require('../models/Mensaje.model');
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -37,6 +38,34 @@ UsuariosCtrl.crearUsuario = async (req, res) => {
 UsuariosCtrl.listarUsuarios = async (req, res) => {
   const respuesta = await Usuario.find();
   res.json(respuesta);
+};
+
+UsuariosCtrl.listarUsuariosConMensajes = async (req, res) => {
+  const phoneDestino = req.params.phoneDestino;
+  const usuarios = await Usuario.find({ state: "Activo" });
+  const usuariosConMensajesSinLeer = await Promise.all(
+    usuarios.map(async (usuario) => {
+      const mensajesSinLeer = await Mensaje.countDocuments({
+        phoneOrigen: phoneDestino,
+        phoneDestino: usuario.phone,
+        state: "0",
+      });
+      return { ...usuario._doc, mensajesSinLeer };
+    })
+  );
+
+  const usuariosOrdenados = usuariosConMensajesSinLeer.sort((a, b) => {
+    if (a.mensajesSinLeer > 0 && b.mensajesSinLeer === 0) {
+      return -1; // a viene antes que b
+    } else if (a.mensajesSinLeer === 0 && b.mensajesSinLeer > 0) {
+      return 1; // b viene antes que a
+    } else {
+      return a.nombre.localeCompare(b.nombre); // orden alfabético si ambos tienen o no tienen mensajes sin leer
+    }
+  });
+
+  res.json({ usuarios: usuariosOrdenados });
+  // res.json({ usuarios: usuariosConMensajesSinLeer });
 };
 
 UsuariosCtrl.buscarUsuario = async (req, res) => {
