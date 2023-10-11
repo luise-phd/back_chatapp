@@ -74,6 +74,25 @@ UsuariosCtrl.buscarUsuario = async (req, res) => {
   res.json(respuesta);
 };
 
+UsuariosCtrl.editarPass = async (req, res) => {
+  const id = req.params.id;
+  const oldPass = req.params.oldPass;
+  const newPass = req.params.newPass;
+  const respuesta = await Usuario.findById({ _id: id });
+  const match = await bcrypt.compare(oldPass, respuesta.pass);
+  if (match) {
+    const newRespuesta = await Usuario.findByIdAndUpdate(
+      // await bcrypt.hash(pass, 10)
+      { _id: id },
+      { $set: { pass: await bcrypt.hash(newPass, 10) } },
+      { new: true }
+    );
+    res.json("ok")
+  } else {
+    res.json("La contraseña actual no coincide con la Contraseña almacenada")
+  }
+};
+
 UsuariosCtrl.eliminarUsuario = async (req, res) => {
   const id = req.params.id;
   const respuesta = await Usuario.findByIdAndRemove({ _id: id });
@@ -111,6 +130,7 @@ UsuariosCtrl.login = async (req, res) => {
         token,
       });
     } else {
+      console.log("Error");
       res.json({
         mensaje: "Contraseña incorrecta",
       });
@@ -118,8 +138,8 @@ UsuariosCtrl.login = async (req, res) => {
   }
   else {
     return res.json({
-        mensaje: "Usuario inactivo",
-      });
+      mensaje: "Usuario inactivo",
+    });
   }
 };
 
