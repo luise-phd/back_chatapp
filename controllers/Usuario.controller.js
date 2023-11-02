@@ -127,6 +127,7 @@ UsuariosCtrl.login = async (req, res) => {
         mensaje: "Bienvenido",
         id: usuario._id,
         nombre: usuario.nombre,
+        admin: usuario.admin,
         token,
       });
     } else {
