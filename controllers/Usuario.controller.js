@@ -105,7 +105,7 @@ UsuariosCtrl.eliminarUsuario = async (req, res) => {
 UsuariosCtrl.editarUsuario = async (req, res) => {
   const id = req.params.id;
   const respuesta = await Usuario.findByIdAndUpdate({ _id: id }, req.body);
-
+  
   res.json({
     mensaje: "Usuario editado",
   });
