@@ -42,7 +42,8 @@ UsuariosCtrl.listarUsuarios = async (req, res) => {
 
 UsuariosCtrl.listarUsuariosConMensajes = async (req, res) => {
   const phoneDestino = req.params.phoneDestino;
-  const usuarios = await Usuario.find({ state: "Activo" });
+  // const usuarios = await Usuario.find({ state: "Activo" });
+  const usuarios = await Usuario.find();
   const usuariosConMensajesSinLeer = await Promise.all(
     usuarios.map(async (usuario) => {
       const mensajesSinLeer = await Mensaje.countDocuments({
